@@ -10,7 +10,6 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const MONGO_URI = process.env.MONGODB_URI;
 
 const app = express();
-const port = 5000;
 
 app.use(express.json());
 
@@ -141,6 +140,8 @@ app.get("/user/:id/profilePhoto", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
+app.listen(3000, () => console.log("Server ready on port 3000."));
+
+module.exports = app;
