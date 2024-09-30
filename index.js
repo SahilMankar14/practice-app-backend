@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGODB_URI;
 
 const app = express();
 const port = 5000;
@@ -58,6 +59,11 @@ const upload = multer({
 app.post("/signup", upload.single("profilePhoto"), async (req, res) => {
   try {
     const userData = req.body;
+    console.log("userData:", userData);
+
+    const hashPassword = await bcrypt.hash(userData.password, 5);
+
+    userData.password = hashPassword;
 
     if (req.file) {
       userData.profilePhoto = {
