@@ -86,17 +86,23 @@ app.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email, password: password });
+    const user = await User.findOne({ email: email });
 
     if (user) {
-      const token = jwt.sign(
-        {
-          username: user.email,
-        },
-        JWT_SECRET
-      );
-      res.setHeader("Authorization", `Bearer ${token}`);
-      res.status(200).send("User authenticated");
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (isPasswordValid) {
+        const token = jwt.sign(
+          {
+            username: user.email,
+          },
+          JWT_SECRET
+        );
+        res.setHeader("Authorization", `Bearer ${token}`);
+        res.status(200).send("User authenticated");
+      } else {
+        res.status(401).send("Invalid email or password");
+      }
     } else {
       res.status(401).send("Invalid email or password");
     }
