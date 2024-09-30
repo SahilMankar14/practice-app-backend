@@ -55,6 +55,8 @@ const upload = multer({
   limits: { fileSize: 16 * 1024 * 1024 }, // 16MB limit
 });
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
 app.post("/signup", upload.single("profilePhoto"), async (req, res) => {
   try {
     const userData = req.body;
@@ -139,8 +141,6 @@ app.get("/user/:id/profilePhoto", async (req, res) => {
     res.status(500).send("Error fetching profile photo");
   }
 });
-
-app.get("/", (req, res) => res.send("Express on Vercel"));
 
 app.listen(3000, () => console.log("Server ready on port 3000."));
 
